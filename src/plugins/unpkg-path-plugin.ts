@@ -1,5 +1,19 @@
 import axios from 'axios';
 import * as esbuild from 'esbuild-wasm';
+//localForage is local cache
+import localForage from 'localforage';
+
+const fileCache = localForage.createInstance({
+  name: 'fileCache',
+});
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+const test = async () => {
+  await fileCache.setItem('color', 'red');
+  const color = await fileCache.getItem('color');
+  console.log('here');
+  console.log(color);
+};
+test();
 
 export const unpkgPathPlugin = () => {
   return {
@@ -39,12 +53,21 @@ export const unpkgPathPlugin = () => {
           };
         }
 
+        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
+          args.path
+        );
+        if (cachedResult) {
+          return cachedResult;
+        }
+
         const { data, request } = await axios.get(args.path);
-        return {
+        const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents: data,
           resolveDir: new URL('./', request.responseURL).pathname,
         };
+        await fileCache.setItem(args.path, result);
+        return result;
       });
     },
   };
