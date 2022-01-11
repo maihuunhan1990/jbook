@@ -1,7 +1,10 @@
 import * as esbuild from 'esbuild-wasm';
+//useRef preserve data during render cycles, does not trigger re-renders
+//useState preserve
 import { ChangeEvent, useState, useEffect, useRef } from 'react';
 
 import ReactDOM from 'react-dom';
+import { fetchPlugin } from './plugins/fetch-plugin';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 
 const App = () => {
@@ -15,6 +18,8 @@ const App = () => {
     });
   };
 
+  //similar to componenentDidMount and componentDidUpdate
+  //will call this method after DOM updates
   useEffect(() => {
     startService();
   }, []);
@@ -26,11 +31,12 @@ const App = () => {
     if (!ref.current) {
       return;
     }
+    //use index.js as an entry point to build bundle
     const result = await ref.current.build({
       entryPoints: ['index.js'],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()],
+      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
       define: {
         'process.env.NODE_ENV': '"production"',
         global: 'window',
