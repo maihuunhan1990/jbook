@@ -1,14 +1,16 @@
 import * as esbuild from 'esbuild-wasm';
 //useRef preserve data during render cycles, does not trigger re-renders
 //useState preserve
-import { ChangeEvent, useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import ReactDOM from 'react-dom';
 import { fetchPlugin } from './plugins/fetch-plugin';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
 
 const App = () => {
+  //make a box so it doesn't change
   const ref = useRef<any>();
+  const iframe = useRef<any>();
   const [input, setInput] = useState('');
   const [code, setCode] = useState('');
   const startService = async () => {
@@ -42,15 +44,23 @@ const App = () => {
         global: 'window',
       },
     });
-
-    console.log(result);
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, '*');
     setCode(result.outputFiles[0].text);
-    try {
-      eval(result.outputFiles[0].text);
-    } catch (err) {
-      alert(err);
-    }
   };
+
+  const html = `
+  <html>
+    <head></head>
+    <body>
+      <div id="root"> </div>
+      <script>
+        window.addEventListener('message', (event) => {
+          eval(event.data);
+        }, false);
+      </script>
+    </body>
+  </html>
+  `;
 
   return (
     <div>
@@ -59,7 +69,13 @@ const App = () => {
         <button onClick={onClick}>submit</button>
       </div>
       <pre>{code}</pre>
-      <iframe src="/test.html" />
+      <iframe
+        //ref is set to iframe
+        ref={iframe}
+        title="iframe"
+        sandbox="allow-scripts"
+        srcDoc={html}
+      />
     </div>
   );
 };
