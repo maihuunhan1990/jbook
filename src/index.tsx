@@ -2,10 +2,13 @@ import * as esbuild from 'esbuild-wasm';
 //useRef preserve data during render cycles, does not trigger re-renders
 //useState preserve
 import { useState, useEffect, useRef } from 'react';
-
+import CodeEditors from './components/code-editor';
 import ReactDOM from 'react-dom';
 import { fetchPlugin } from './plugins/fetch-plugin';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
+//npm install bulmaswatch
+//a popular css lib
+import 'bulmaswatch/superhero/bulmaswatch.min.css';
 
 const App = () => {
   //make a box so it doesn't change
@@ -72,6 +75,12 @@ const App = () => {
 
   return (
     <div>
+      <CodeEditors
+        initialValue="const a = 1;"
+        onChange={(e) => {
+          setInput(e);
+        }}
+      />
       <textarea value={input} onChange={onTextAreaChange}></textarea>
       <div>
         <button onClick={onClick}>submit</button>

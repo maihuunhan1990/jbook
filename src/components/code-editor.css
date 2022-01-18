@@ -1,0 +1,34 @@
+.editor-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.editor-wrapper .button-format {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  /* make sure it show up in front of editor */
+  z-index: 20;
+  /* make sure button start off as 0 */
+  opacity: 0;
+  /* time that takes to change opacity if we ever change the opacity */
+  transition: opacity 0.3s;
+}
+
+.editor-wrapper .theme-button-format {
+  position: absolute;
+  top: 5px;
+  right: 75px;
+  /* make sure it show up in front of editor */
+  z-index: 20;
+  /* make sure button start off as 0 */
+  opacity: 0;
+  /* time that takes to change opacity if we ever change the opacity */
+  transition: opacity 0.3s;
+}
+
+/* if we ever hover over editor-wrapper it will change the opacity */
+.editor-wrapper:hover .button-format,
+.editor-wrapper:hover .theme-button-format {
+  opacity: 1;
+}
