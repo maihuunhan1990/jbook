@@ -73,7 +73,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onChange, initialValue }) => {
         }}
         language="javascript"
         theme={theme}
-        height={'500px'}
+        height={'100%'}
       />
     </div>
   );
