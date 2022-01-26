@@ -42,7 +42,7 @@ const ResizableBox: React.FC<ResizableProps> = ({ direction, children }) => {
     resizableProps = {
       className: 'resize-horizontal',
       height: Infinity,
-      width: width * 0.75,
+      width: width,
       resizeHandles: ['e'],
       maxConstraints: [innerWidth * 0.75, Infinity],
       minConstraints: [innerWidth * 0.2, Infinity],

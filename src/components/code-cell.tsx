@@ -9,11 +9,13 @@ import ResizableBox from './resizable';
 const CodeCell = () => {
   const [input, setInput] = useState('');
   const [code, setCode] = useState('');
+  const [err, setErr] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundle(input);
-      setCode(output);
+      setCode(output.code);
+      setErr(output.err);
     }, 1000);
 
     // effects run for every render and not just once. This is why React also cleans up effects from the previous render before
