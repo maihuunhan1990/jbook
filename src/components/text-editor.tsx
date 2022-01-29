@@ -1,37 +1,44 @@
+import './text-editor.css';
 import MDEditor from '@uiw/react-md-editor';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export const TextEditor: React.FC = () => {
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState('');
-  const [text2, setText2] = useState('');
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [value, setValue] = useState('# Header');
 
   useEffect(() => {
-    const listener = () => {
-      //   setEditing(false);
-      console.log('listener');
+    const listener = (event: MouseEvent) => {
+      if (
+        ref.current &&
+        event.target &&
+        ref.current.contains(event.target as Node)
+      ) {
+        console.log('element click is inside');
+        return;
+      }
+      console.log('else');
+      console.log(event.target);
+      setEditing(false);
     };
-    console.log('useEffect called');
     document.addEventListener('click', listener, { capture: true });
     return () => {
-      console.log('cleaning up');
       document.removeEventListener('click', listener, { capture: true });
     };
-  }, [text]);
+  }, []);
 
-  console.log(editing);
   if (editing) {
     return (
-      <div>
-        <MDEditor />
+      <div className="text-editor" ref={ref}>
+        <MDEditor value={value} onChange={(v) => setValue(v || '')} />
       </div>
     );
   }
   return (
-    <div onClick={() => setEditing(false)}>
-      <textarea onChange={(e) => setText(e.target.value)} value={text} />
-      <textarea onChange={(e) => setText2(e.target.value)} value={text2} />
-      <MDEditor.Markdown source={'# Header'} />
+    <div className="text-editor card" onClick={() => setEditing(true)}>
+      <div className="card-content">
+        <MDEditor.Markdown source={value} />
+      </div>
     </div>
   );
 };
