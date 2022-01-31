@@ -17,8 +17,6 @@ export const TextEditor: React.FC = () => {
         console.log('element click is inside');
         return;
       }
-      console.log('else');
-      console.log(event.target);
       setEditing(false);
     };
     document.addEventListener('click', listener, { capture: true });
