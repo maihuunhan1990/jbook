@@ -4,3 +4,5 @@ the state directory and mess around inside of here
 */
 export * from './store';
 export * from './reducers';
+export * from './cell';
+export * as actionCreator from './action-creators';
